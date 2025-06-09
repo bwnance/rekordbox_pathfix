@@ -7,12 +7,21 @@ except:
     print("getting key")
     subprocess.run(["python -m pyrekordbox download-key"], shell=True)
     print("run me again!")
+    exit(1)
 deviceid = db.get_device()[0].ID
 content = db.get_content()
 
-songs = songs = [c for c in content if c.Title is not None and c.FolderPath is not None and 'soundcloud:' not in c.FolderPath]
+songs = [c for c in content if c.Title is not None and c.FolderPath is not None and 'soundcloud:' not in c.FolderPath]
 for song in songs:
-    song.FolderPath = song.OrgFolderPath
+    if 'Users/Shared' in song.FolderPath:
+        continue
+    org_path = song.OrgFolderPath
+    if org_path is not None:
+        song.FolderPath = song.OrgFolderPath
+    else:
+        mp3_name = song.FolderPath.split("/")[-1]
+        new_path = f"/Users/Shared/DJ_Tracks/{mp3_name}"
+        song.FolderPath = new_path
     song.DeviceID = deviceid
 success = False
 try:
