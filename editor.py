@@ -13,10 +13,10 @@ content = db.get_content()
 
 songs = [c for c in content if c.Title is not None and c.FolderPath is not None and 'soundcloud:' not in c.FolderPath]
 for song in songs:
-    if 'Users/Shared' in song.FolderPath:
+    if 'Users/Shared' in song.FolderPath and song.DeviceID == deviceid:
         continue
     org_path = song.OrgFolderPath
-    if org_path is not None:
+    if org_path:
         song.FolderPath = song.OrgFolderPath
     else:
         mp3_name = song.FolderPath.split("/")[-1]
